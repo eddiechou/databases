@@ -1,12 +1,21 @@
 var models = require('../models');
 
+exports.headers = {
+  'access-control-allow-origin': '*',
+  'access-control-allow-methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'access-control-allow-headers': 'content-type, accept',
+  'access-control-max-age': 10, // Seconds.
+  'Content-Type': 'text/html'
+};
+
 module.exports = {
   messages: {
     get: function (req, res) {
       models.messages.get(function(results) {
         // Get all the data (messages, roomname, username)
+        console.log('==========================', results);
         res.writeHead(200);
-        res.end(results[0].id.toString());
+        res.end(results);
       });
     }, // a function which handles a get request for all messages
     post: function (req, res) {
@@ -22,12 +31,13 @@ module.exports = {
         body = body.replace('+', ' ');
         body = body.replace('&submit=Submit', '');
         messageObj.text = body;
-        messageObj.username = 'Fred';
-        messageObj.roomname = 'main';
+        messageObj.username = 'apple';
+        messageObj.roomname = 'apple store';
         console.log('BODY: ', body);
         models.messages.post(messageObj, function() {
-          res.writeHead(201);
-          res.end('');
+          console.log('=========================================');
+          res.writeHead(201, exports.headers);
+          res.end(JSON.stringify());
         });
       });
     } // a function which handles posting a message to the database
@@ -37,9 +47,15 @@ module.exports = {
     // Ditto as above
     get: function (req, res) {
       // Get all usernames
+      models.users.get(function() {
+
+      });
     },
     post: function (req, res) {
       // Insert new user to db
+      models.users.post(function() {
+
+      });
     }
   }
 };

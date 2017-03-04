@@ -26,7 +26,7 @@ var app = {
     app.$roomSelect.on('change', app.handleRoomChange);
 
     // Fetch previous messages
-    app.startSpinner();
+   // app.startSpinner();
     app.fetch(false);
 
     // Poll for new messages
@@ -36,7 +36,7 @@ var app = {
   },
 
   send: function(message) {
-    app.startSpinner();
+    // app.startSpinner();
 
     // POST the message to the server
     $.ajax({
@@ -97,7 +97,7 @@ var app = {
   renderMessages: function(messages, animate) {
     // Clear existing messages`
     app.clearMessages();
-    app.stopSpinner();
+    // app.stopSpinner();
     if (Array.isArray(messages)) {
       // Add all fetched messages that are in our current room
       messages
@@ -225,12 +225,12 @@ var app = {
   },
 
   // startSpinner: function() {
-  //   $('.spinner img').show();
+    // $('.spinner img').show();
   //   $('form input[type=submit]').attr('disabled', 'true');
   // },
 
   // stopSpinner: function() {
-  //   $('.spinner img').fadeOut('fast');
+    // $('.spinner img').fadeOut('fast');
   //   $('form input[type=submit]').attr('disabled', null);
   // }
 };
