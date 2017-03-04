@@ -9,8 +9,11 @@ exports.headers = {
 };
 
 var collectData = function(request, callback) {
-  console.log("getting in?????????");
+  console.log("getting in?????????", request.body);
   var data = '';
+  if (request.body !== null) {
+    callback(request.body);
+  }
   request.on('data', function(chunk) {
     console.log("collectiong chunk!!!", chunk);
     data += chunk;

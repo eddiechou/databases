@@ -42,7 +42,7 @@ module.exports = {
       });
     },
     post: function (messageObj, callback) {
-      db.dbConnection.query(`INSERT INTO Users (username) values ("${messageObj.username}");`, function(err, results) {
+      db.dbConnection.query(`INSERT IGNORE INTO Users (username) values ("${messageObj.username}");`, function(err, results) {
         console.log(">>>>>>>> index.js models users get <<<<<<<<<<<<<", results);
         callback(results);
       });
