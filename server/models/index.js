@@ -1,9 +1,37 @@
-var db = require('../db');
+var db = require('../db/index');
 
 module.exports = {
   messages: {
-    get: function () {}, // a function which produces all the messages
-    post: function () {} // a function which can be used to insert a message into the database
+    get: function (callback) {
+      db.dbConnection.query('SELECT * FROM Messages', function(err, results) {
+        if (err) {
+          throw err;
+        } else {
+          console.log(results);
+          callback(results);
+
+        }
+      });
+    }, // a function which produces all the messages
+    post: function (messageObj, callback) {
+      var query1 = 'INSERT INTO Rooms (roomname) values ("main"); ';
+      //var roomId = 'SELECT id FROM Rooms WHERE name = "main";';
+      var query2 = 'INSERT INTO Users (username) values ("Eddie"); ';
+      //var userId = 'SEL'
+      var query3 = 'INSERT INTO Messages (text, user_id, room_id) SELECT "Men like you can never change!", r.id, (SELECT u.id FROM Users u WHERE u.username = "Eddie") FROM Rooms r WHERE r.roomname = "main";';
+
+
+      db.dbConnection.query(`INSERT IGNORE INTO Users (username) values (${messageObj.username})`, function(err, results) {
+
+      });
+      db.dbConnection.query(`INSERT IGNORE INTO Rooms (roomname) values (${messageObj.roomname})`, function(err, results) {
+
+      });
+      db.dbConnection.query(`INSERT INTO Messages (text, user_id, room_id) SELECT "${messageObj.text}", r.id, (SELECT u.id FROM Users u WHERE u.username = "Eddie") FROM Rooms r WHERE r.roomname = "main";`, function(err, results) {
+
+      });
+
+    } // a function which can be used to insert a message into the database
   },
 
   users: {
