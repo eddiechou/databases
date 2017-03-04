@@ -8,38 +8,41 @@ exports.headers = {
   'Content-Type': 'text/html'
 };
 
+var collectData = function(request, callback) {
+  console.log("getting in?????????");
+  var data = '';
+  request.on('data', function(chunk) {
+    console.log("collectiong chunk!!!", chunk);
+    data += chunk;
+  });
+  request.on('end', function() {
+    console.log("oh no it's data!!!!>_< : ", data);
+    callback(JSON.parse(data));
+  });
+};
+
+
 module.exports = {
   messages: {
     get: function (req, res) {
       models.messages.get(function(results) {
         // Get all the data (messages, roomname, username)
-        console.log('==========================', results);
-        res.writeHead(200);
-        res.end(results);
+        console.log('--------->>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<', results);
+        res.writeHead(200, exports.headers);
+        res.end(JSON.stringify(results));
       });
     }, // a function which handles a get request for all messages
     post: function (req, res) {
-      var body = '';
-      req.on('data', function(chunk) {
-        body += chunk;
-      });
-
-      req.on('end', function() {
-        // insert the message (3 SQL insert statements)
-        var messageObj = {};
-        body = body.replace('message=', '');
-        body = body.replace('+', ' ');
-        body = body.replace('&submit=Submit', '');
-        messageObj.text = body;
-        messageObj.username = 'apple';
-        messageObj.roomname = 'apple store';
-        console.log('BODY: ', body);
-        models.messages.post(messageObj, function() {
-          console.log('=========================================');
+      collectData(req, function(message) {
+        console.log("message!!!!", message);
+        // 
+        models.messages.post(message, function() {
           res.writeHead(201, exports.headers);
-          res.end(JSON.stringify());
+          res.end();
         });
+      
       });
+      //});
     } // a function which handles posting a message to the database
   },
 
@@ -47,14 +50,22 @@ module.exports = {
     // Ditto as above
     get: function (req, res) {
       // Get all usernames
-      models.users.get(function() {
-
+      models.users.get(function(results) {
+      // Get all the data (messages, roomname, username)
+        console.log('index controller >> users >> get >>>>>>>>>>>', results);
+        res.writeHead(200, exports.headers);
+        res.end(JSON.stringify(results));
       });
     },
     post: function (req, res) {
       // Insert new user to db
-      models.users.post(function() {
-
+      console.log('get into /classes/users POST');
+      collectData(req, function(message) {
+        console.log('index controller >> users >> post >>>>>>>>>>>', message);
+        models.users.post(message, function() {
+          res.writeHead(201, exports.headers);
+          res.end();
+        });
       });
     }
   }

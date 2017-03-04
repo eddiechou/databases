@@ -60,24 +60,26 @@ var app = {
     $.ajax({
       url: app.server + '/classes/messages',
       type: 'GET',
-      // data: { order: '-createdAt' },
+      data: { order: '-createdAt' },
       contentType: 'application/json',
       success: function(data) {
         console.log('>>>>> FETCH SUCCESS');
         // Don't bother if we have nothing to work with
-        // if (!data.results || !data.results.length) { return; }
-        console.log('results from GET call: ', data);
         data = JSON.parse(data);
+        if (!data || !data.length) { return; }
+        console.log('results from GET call: ', data);
+        console.log('data length', data.length);
         // Store messages for caching later
         app.messages = data;
         // app.renderMessages(data);
         // Get the last message
-        var mostRecentMessage = data[data.length - 1];
+        var mostRecentMessage = data[0];
         // var mostRecentMessage = data[0];
-
+        console.log(mostRecentMessage.id, "comparing", app.lastMessageId);
         // Only bother updating the DOM if we have a new message
         if (mostRecentMessage.id !== app.lastMessageId) {
           // Update the UI with the fetched rooms
+          console.log("got in the id thing!!");
           app.renderRoomList(data);
 
           // Update the UI with the fetched messages
@@ -206,7 +208,7 @@ var app = {
         app.$roomSelect.val(roomname);
       }
     } else {
-      app.startSpinner();
+      // app.startSpinner();
       // Store as undefined for empty names
       app.roomname = app.$roomSelect.val();
     }
