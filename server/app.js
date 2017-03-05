@@ -19,8 +19,6 @@ app.use(morgan('dev'));
 app.use(parser.json());
 
 // Set up our routes
-// app.use('/classes', router);
-
 app.use('', router);
 
 // Serve the client files

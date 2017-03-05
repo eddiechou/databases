@@ -46,7 +46,6 @@ var app = {
       success: function (data) {
         // Clear messages input
         app.$message.val('');
-        console.log('>>> GET SUCCESS');
         // Trigger a fetch to update the messages, pass true to animate
         app.fetch(true);
       },
@@ -63,28 +62,19 @@ var app = {
       data: { order: '-createdAt' },
       contentType: 'application/json',
       success: function(data) {
-        console.log('>>>>> FETCH SUCCESS');
         // Don't bother if we have nothing to work with
         data = JSON.parse(data);
         if (!data || !data.length) { return; }
-        console.log('results from GET call: ', data);
-        console.log('data length', data.length);
         // Store messages for caching later
         app.messages = data;
-        // app.renderMessages(data);
         // Get the last message
         var mostRecentMessage = data[0];
-        // var mostRecentMessage = data[0];
-        console.log(mostRecentMessage.id, "comparing", app.lastMessageId);
         // Only bother updating the DOM if we have a new message
         if (mostRecentMessage.id !== app.lastMessageId) {
           // Update the UI with the fetched rooms
-          console.log("got in the id thing!!");
           app.renderRoomList(data);
-
           // Update the UI with the fetched messages
           app.renderMessages(data, animate);
-
           // Store the ID of the most recent message
           app.lastMessageId = mostRecentMessage.id;
         }
@@ -102,7 +92,6 @@ var app = {
   renderMessages: function(messages, animate) {
     // Clear existing messages`
     app.clearMessages();
-    // app.stopSpinner();
     if (Array.isArray(messages)) {
       // Add all fetched messages that are in our current room
       messages
@@ -208,7 +197,6 @@ var app = {
         app.$roomSelect.val(roomname);
       }
     } else {
-      // app.startSpinner();
       // Store as undefined for empty names
       app.roomname = app.$roomSelect.val();
     }
@@ -222,20 +210,9 @@ var app = {
       text: app.$message.val(),
       roomname: app.roomname || 'lobby'
     };
-    console.log("this is the message we are sending!", message);
     app.send(message);
 
     // Stop the form from submitting
     event.preventDefault();
-  },
-
-  // startSpinner: function() {
-    // $('.spinner img').show();
-  //   $('form input[type=submit]').attr('disabled', 'true');
-  // },
-
-  // stopSpinner: function() {
-    // $('.spinner img').fadeOut('fast');
-  //   $('form input[type=submit]').attr('disabled', null);
-  // }
+  }
 };
